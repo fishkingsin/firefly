@@ -2,10 +2,16 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    receiver.setup(PORT);
+    
+    current_msg_string = 0;
+    
     ofSetLogLevel(OF_LOG_VERBOSE);
     
-    
-    
+#if USE_EDSDK
+    camera.setup();
+#endif
     vector<ofVideoDevice> devices = videoGrabber.listDevices();
     
     for(int i = 0; i < devices.size(); i++){
@@ -31,7 +37,11 @@ void ofApp::setup(){
     rgbaFboFloat.end();
     
     videoTexture.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
- 
+    ofPixels pixels;
+    pixels.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
+    rgbaFboFloat.readToPixels(pixels);
+    
+    videoTexture.loadData(pixels);
     
     if(ofIsGLProgrammableRenderer()){
         string vertex = "#version 150\n\
@@ -83,28 +93,50 @@ void ofApp::setup(){
         vec3 src = texture2DRect(tex0, pos).rgb;\
         float mask = (src.g+src.r+src.b)/3.0f;\
         \
-        gl_FragColor = vec4( src , (mask>0.5f)?1.0f:0.0f);\
+        gl_FragColor = vec4( src , (mask>0.8f)?1.0f:0.0f);\
         }";
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderProgram);
         shader.linkProgram();
     }
 }
 
-
+void ofApp::exit() {
+    #if USE_EDSDK
+    camera.close();
+#endif
+    
+}
 //--------------------------------------------------------------
 void ofApp::update(){
+    // check for waiting messages
+    
     ofEnableAlphaBlending();
-    
+#if USE_EDSDK
     //lets draw some graphics into our two fbos
+    camera.update();
     
-    videoGrabber.update();
-    
-    if(videoGrabber.isFrameNew()){
-        ofPixels & pixels = videoGrabber.getPixels();
 
+    if(camera.isFrameNew()) {
+        
+        ofPixels pixels = camera.getLivePixels();
+        
         videoTexture.loadData(pixels);
+        
+        
     }
-    
+    else
+#endif
+    {
+        
+        videoGrabber.update();
+        
+        if(videoGrabber.isFrameNew()){
+            ofPixels & pixels = videoGrabber.getPixels();
+            
+            videoTexture.loadData(pixels);
+        }
+        
+    }
     rgbaFboFloat.begin();
     
     if(ofGetKeyPressed('1')){
@@ -117,8 +149,8 @@ void ofApp::update(){
     else if(ofGetKeyPressed('4')){
         fadeAmnt = 256;
     }
-        ofSetColor(0, fadeAmnt);
-        ofDrawRectangle(0, 0, rgbaFboFloat.getWidth(), rgbaFboFloat.getHeight());
+    ofSetColor(0, fadeAmnt);
+    ofDrawRectangle(0, 0, rgbaFboFloat.getWidth(), rgbaFboFloat.getHeight());
     shader.begin();
     videoTexture.draw(0, 0);
     shader.end();
@@ -189,6 +221,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
     
 }

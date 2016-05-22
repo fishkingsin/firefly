@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "542AA5F01D83C433FCB907EF0BEAE697C6036640",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "36985836DF35EF8F5D7D4E20C1E7B9D301114BDF" : 0,
+    "542AA5F01D83C433FCB907EF0BEAE697C6036640" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "BA1C2A97-9D39-46D3-85D4-CE1AF7DD3AFB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "36985836DF35EF8F5D7D4E20C1E7B9D301114BDF" : "..\/addons\/ofxEdsdk",
+    "542AA5F01D83C433FCB907EF0BEAE697C6036640" : "fireFlyP5\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "videoDelay",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "videoDelay\/videoDelay.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/fishkingsin\/ofxedsdk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "36985836DF35EF8F5D7D4E20C1E7B9D301114BDF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:fishkingsin\/fireFlyP5.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "542AA5F01D83C433FCB907EF0BEAE697C6036640"
+    }
+  ]
+}
