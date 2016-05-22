@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxEdsdk.h"
-#define USE_EDSDK 0
+#define USE_EDSDK 1
 
 using namespace ofxEdsdk;
 #define PORT 53000

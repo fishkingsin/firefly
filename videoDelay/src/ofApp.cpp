@@ -128,13 +128,13 @@ void ofApp::update(){
 #endif
     {
         
-        videoGrabber.update();
-        
-        if(videoGrabber.isFrameNew()){
-            ofPixels & pixels = videoGrabber.getPixels();
-            
-            videoTexture.loadData(pixels);
-        }
+//        videoGrabber.update();
+//        
+//        if(videoGrabber.isFrameNew()){
+//            ofPixels & pixels = videoGrabber.getPixels();
+//            
+//            videoTexture.loadData(pixels);
+//        }
         
     }
     rgbaFboFloat.begin();
