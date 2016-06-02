@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Light each LED in sequence, and repeat.
-import Image
+from PIL import Image
 import opc, time
 import atexit
 import random
@@ -13,9 +13,11 @@ import argparse
 import math
 from OSC import OSCServer
 import sys
-import threading
+import thread
 import ctypes
 
+server = OSCServer( ("localhost", 7110) )
+server.timeout = 0
 
 # numLEDs = 64
 client = opc.Client('localhost:7890')
@@ -37,10 +39,10 @@ bOffset = 1
 # use, offsets can be changed with the 'order' keyword (see strandtest.py).
 
 def on_exit():
+	global server
 	server.timed_out = True
-	global threads
-	for t in threads:
-		t._stop()
+	print "on exit"
+	thread.exit()
 	for x in range(width):         # For each column of image...
 		client.put_pixels([ (0,0,0) ]*height)
 	
@@ -104,19 +106,6 @@ def init():
 	Allocate()
 	Convert()
 
-def print_volume_handler(unused_addr, args, volume):
-	print("[{0}] ~ {1}".format(args[0], volume))
-
-def print_compute_handler(unused_addr, args, volume):
-	try:
-		print("[{0}] ~ {1}".format(args[0], args[1](volume)))
-	except ValueError: pass
-def debug_print(unused_addr, args, volume):
-	try:
-		print("[{0}] ~ {1}".format(args[0], args[1](volume)))
-	except ValueError: pass
-
-
 # this method of reporting timeouts only works by convention
 # that before calling handle_request() field .timed_out is 
 # set to False
@@ -139,6 +128,7 @@ def quit_callback(path, tags, args, source):
 def debug_callback(path, tags, args, source):
 	print ("debug do something with", user,args[2],args[0],1-args[1]) 
 def each_frame():
+	global server
 	# clear timed_out flag
 	server.timed_out = False
 	# handle all pending requests then return
@@ -147,7 +137,6 @@ def each_frame():
 		server.handle_request()
 
 
-threads = []
 if __name__ == "__main__":
 	init()
 	parser = argparse.ArgumentParser()
@@ -156,7 +145,7 @@ if __name__ == "__main__":
 	parser.add_argument("--port",
 		type=int, default=3000, help="The port to listen on")
 	args = parser.parse_args()
-
+	global server
 	server = OSCServer((args.ip, args.port))
 	server.addMsgHandler( "/user/1", user_callback )
 	server.addMsgHandler( "/user/2", user_callback )
@@ -165,11 +154,7 @@ if __name__ == "__main__":
 	server.addMsgHandler( "/quit", quit_callback )
 	server.addMsgHandler( "/", debug_callback )
 	print server
-	global threads
-	t = threading.Thread(target=each_frame, args="")
-	
-	threads.append(t)
-	t.start()
+	thread.start_new_thread(each_frame, ())
 	
 	while True:                            # Loop forever
 		print "Displaying..."
