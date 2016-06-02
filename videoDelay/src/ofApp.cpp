@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    ofSetFrameRate(60);
     receiver.setup(PORT);
     
     current_msg_string = 0;
