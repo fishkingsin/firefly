@@ -15,6 +15,7 @@ from OSC import OSCServer
 import sys
 import thread
 import ctypes
+import os
 
 server = OSCServer( ("localhost", 7110) )
 server.timeout = 0
@@ -44,7 +45,8 @@ def on_exit():
 	print "on exit"
 	thread.exit()
 	for x in range(width):         # For each column of image...
-		client.put_pixels([ (0,0,0) ]*height)
+		client.put_pixels([ (0,0,0) ]*height , 0)
+		client.put_pixels([ (0,0,0) ]*height , 1)
 	
 
 
@@ -63,9 +65,11 @@ def Loading():
 	global gamma
 	global image_list ;
 	print "Loading..."
-	image_list  = ["arrow-01.png", "hello-01.png", "rainbow-01.png", "square-01.png", "star-01.png", "star-01_.png", "triangle-01.png"]
-	img       = Image.open(random.choice(image_list)).convert("RGB")
-	
+	image_list  = [f for f in os.listdir('.') if os.path.isfile(f)  if  f.endswith(".png") ]
+	for f in image_list:
+		print "file  : " + f
+	# img       = Image.open(random.choice(image_list)).convert("RGB")
+	img       = Image.open("arrow-01.png").convert("RGB")
 	pixels    = img.load()
 	
 	width     = img.size[0]
@@ -74,7 +78,8 @@ def Loading():
 	# Calculate gamma correction table, makes mid-range colors look 'right':
 	gamma = bytearray(256)
 	for i in range(256):
-		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0 + 0.5)
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  + 0.5)
+		# print str(i) + " : gamma " + str(gamma[i]) 
 def Allocate():
 	# Allocate list of bytearrays, one for each column of image.
 	# Each pixel REQUIRES 4 bytes (0xFF, B, G, R).
@@ -139,25 +144,25 @@ def each_frame():
 
 if __name__ == "__main__":
 	init()
-	parser = argparse.ArgumentParser()
-	parser.add_argument("--ip",
-		default="localhost", help="The ip to listen on")
-	parser.add_argument("--port",
-		type=int, default=3000, help="The port to listen on")
-	args = parser.parse_args()
-	global server
-	server = OSCServer((args.ip, args.port))
-	server.addMsgHandler( "/user/1", user_callback )
-	server.addMsgHandler( "/user/2", user_callback )
-	server.addMsgHandler( "/user/3", user_callback )
-	server.addMsgHandler( "/user/4", user_callback )
-	server.addMsgHandler( "/quit", quit_callback )
-	server.addMsgHandler( "/", debug_callback )
-	print server
-	thread.start_new_thread(each_frame, ())
-	
+	# parser = argparse.ArgumentParser()
+	# parser.add_argument("--ip",
+	# 	default="localhost", help="The ip to listen on")
+	# parser.add_argument("--port",
+	# 	type=int, default=3000, help="The port to listen on")
+	# args = parser.parse_args()
+	# global server
+	# server = OSCServer((args.ip, args.port))
+	# server.addMsgHandler( "/user/1", user_callback )
+	# server.addMsgHandler( "/user/2", user_callback )
+	# server.addMsgHandler( "/user/3", user_callback )
+	# server.addMsgHandler( "/user/4", user_callback )
+	# server.addMsgHandler( "/quit", quit_callback )
+	# server.addMsgHandler( "/", debug_callback )
+	# print server
+	# thread.start_new_thread(each_frame, ())
+	# atexit.register(on_exit);
 	while True:                            # Loop forever
-		print "Displaying..."
+		# print "Displaying..."
 		# each_frame()
 
 		for x in range(width):         # For each column of image...
