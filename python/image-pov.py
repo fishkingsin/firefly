@@ -17,11 +17,16 @@ import thread
 import ctypes
 import os
 
-server = OSCServer( ("localhost", 7110) )
-server.timeout = 0
+
+server = OSCServer(("localhost", 7100))
+	
+client = opc.Client('localhost:7890')
+
+# server = OSCServer( ("localhost", 7110) )
+# server.timeout = 0
 
 # numLEDs = 64
-client = opc.Client('localhost:7890')
+
 filename  = "arrow-01.png" # Image file to load
 # Notice the number of LEDs is set to 0.  This is on purpose...we're asking
 # the DotStar module to NOT allocate any memory for this strip...we'll handle
@@ -39,24 +44,21 @@ bOffset = 1
 # This is ONLY necessary because we're raw-writing; for normal setPixelColor
 # use, offsets can be changed with the 'order' keyword (see strandtest.py).
 
-def on_exit():
-	global server
-	server.timed_out = True
-	print "on exit"
-	thread.exit()
-	for x in range(width):         # For each column of image...
-		client.put_pixels([ (0,0,0) ]*height , 0)
-		client.put_pixels([ (0,0,0) ]*height , 1)
-	
-
-
-atexit.register(on_exit)
 width = 0
 height = 0
 pixels = []
 gamma = []
-column = []
+column1 = []
+
 image_list = 0
+def on_exit(server,client):
+# def on_exit(client):
+	# server.timed_out = True
+	server.close()
+	print "on exit"
+	for x in range(width):         # For each column1 of image...
+		client.put_pixels( [ (0,0,0) ]*height )
+		client.put_pixels([ (0,0,0) ]*height )	
 # Load image in RGB format and get dimensions:
 def Loading():
 	global pixels
@@ -68,8 +70,8 @@ def Loading():
 	image_list  = [f for f in os.listdir('.') if os.path.isfile(f)  if  f.endswith(".png") ]
 	for f in image_list:
 		print "file  : " + f
-	# img       = Image.open(random.choice(image_list)).convert("RGB")
-	img       = Image.open("arrow-01.png").convert("RGB")
+	img       = Image.open(random.choice(image_list)).convert("RGB")
+	# img       = Image.open("arrow-01.png").convert("RGB")
 	pixels    = img.load()
 	
 	width     = img.size[0]
@@ -80,33 +82,45 @@ def Loading():
 	for i in range(256):
 		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  + 0.5)
 		# print str(i) + " : gamma " + str(gamma[i]) 
+
+
 def Allocate():
-	# Allocate list of bytearrays, one for each column of image.
+	# Allocate list of bytearrays, one for each column1 of image.
 	# Each pixel REQUIRES 4 bytes (0xFF, B, G, R).
 	print "Allocating..."
-	global column
-	column = [0 for x in range(width)]
+	global column1
+	
+	column1 = [0 for x in range(width)]
+	
 	for x in range(width):
-		# column[x] = bytearray(height * 4)
-		column[x] = [ (0,0,0) ]*height
+		# column1[x] = bytearray(height * 4)
+		column1[x] = [ (0,0,0) ]*(int)(128)
+		
 
-# Convert entire RGB image into column-wise BGR bytearray list.
+# Convert entire RGB image into column1-wise BGR bytearray list.
 # The image-paint.py example proceeds in R/G/B order because it's counting
 # on the library to do any necessary conversion.  Because we're preparing
 # data directly for the strip, it's necessary to work in its native order.
 def Convert():
-	global column
+	global column1
+	global column2
 	global gamma
 	print "Converting..."
 	global pixels
-	for x in range(width):          # For each column of image...
-		for y in range(height): # For each pixel in column...
-			value             = pixels[x, y]    # Read pixel in image
-			y3                = y            # Position in raw buffer
-			column[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
+	for x in range(width):          # For each column1 of image...
+		for y in range(height): # For each pixel in column1...
+			if y<=31:
+				value             = pixels[x, y]    # Read pixel in image
+				y3                = y            # Position in raw buffer
+				column1[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
+			else:
+				value             = pixels[x, y]    # Read pixel in image
+				y3                = 64+y-32            # Position in raw buffer
+				column1[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
 
 
 def init():
+	
 	Loading()
 	Allocate()
 	Convert()
@@ -114,58 +128,62 @@ def init():
 # this method of reporting timeouts only works by convention
 # that before calling handle_request() field .timed_out is 
 # set to False
-def handle_timeout(self):
-	self.timed_out = True
-def user_callback(path, tags, args, source):
+# def handle_timeout(self):
+	# self.timed_out = True
+
+
+def change_image_callback(path, tags, args, source):
 	# which user will be determined by path:
 	# we just throw away all slashes and join together what's left
-	user = ''.join(path.split("/"))
+	
 	# tags will contain 'fff'
 	# args is a OSCMessage with data
 	# source is where the message came from (in case you need to reply)
-	print ("Now do something with", user,args[2],args[0],1-args[1]) 
+	print ("Now do something with",args[0]) 
 
-def quit_callback(path, tags, args, source):
-	# don't do this at home (or it'll quit blender)
-	global run
-	run = False
-	# user script that's called by the game engine every frame
-def debug_callback(path, tags, args, source):
-	print ("debug do something with", user,args[2],args[0],1-args[1]) 
-def each_frame():
-	global server
+
+def change_speed_callback(path, tags, args, source):
+	# which user will be determined by path:
+	# we just throw away all slashes and join together what's left
+	print ("change_speed_callback ",path) 
+	print ("change_speed_callback ",tags) 
+	print ("change_speed_callback ",args) 
+	print ("change_speed_callback ",source) 
+	# tags will contain 'fff'
+	# args is a OSCMessage with data
+	# source is where the message came from (in case you need to reply)
+	print ("Now do something with",args[0]) 
+
+
+
+def each_frame(server):
 	# clear timed_out flag
-	server.timed_out = False
 	# handle all pending requests then return
-	while not server.timed_out:
-		print "handle_request..."
-		server.handle_request()
+	try:
+		while True:
+			# print "handle_request..."
+			server.handle_request()
+	except Exception as errtxt:
+		print errtxt
 
+
+
+def each_frame_led(client):
+	print "Displaying..."
+	
 
 if __name__ == "__main__":
 	init()
-	# parser = argparse.ArgumentParser()
-	# parser.add_argument("--ip",
-	# 	default="localhost", help="The ip to listen on")
-	# parser.add_argument("--port",
-	# 	type=int, default=3000, help="The port to listen on")
-	# args = parser.parse_args()
-	# global server
-	# server = OSCServer((args.ip, args.port))
-	# server.addMsgHandler( "/user/1", user_callback )
-	# server.addMsgHandler( "/user/2", user_callback )
-	# server.addMsgHandler( "/user/3", user_callback )
-	# server.addMsgHandler( "/user/4", user_callback )
-	# server.addMsgHandler( "/quit", quit_callback )
-	# server.addMsgHandler( "/", debug_callback )
-	# print server
-	# thread.start_new_thread(each_frame, ())
-	# atexit.register(on_exit);
-	while True:                            # Loop forever
-		# print "Displaying..."
-		# each_frame()
+	server.addMsgHandler( "/change_image", change_image_callback )
+	server.addMsgHandler( "/change_speed", change_speed_callback )
 
-		for x in range(width):         # For each column of image...
-			client.put_pixels(column[x],0)  # Write raw data to strip
-			client.put_pixels(column[x],1)  # Write raw data to strip
+	# print server
+	thread.start_new_thread(each_frame, (server,))
+	# thread.start_new_thread(each_frame_led, (client,))
+	atexit.register(on_exit, server, client);
+	# atexit.register(on_exit, client);
+	while True:                            # Loop forever
+		for x in range(width):         # For each column1 of image...
+			client.put_pixels(column1[x])  # Write raw data to strip
 			time.sleep(0.0005)
+	
