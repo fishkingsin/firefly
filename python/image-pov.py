@@ -18,7 +18,7 @@ import ctypes
 import os
 
 
-server = OSCServer(("localhost", 7100))
+server = OSCServer(("0.0.0.0", 7110))
 	
 client = opc.Client('localhost:7890')
 
@@ -26,7 +26,7 @@ client = opc.Client('localhost:7890')
 # server.timeout = 0
 
 # numLEDs = 64
-
+fileNameArg = ""
 filename  = "arrow-01.png" # Image file to load
 # Notice the number of LEDs is set to 0.  This is on purpose...we're asking
 # the DotStar module to NOT allocate any memory for this strip...we'll handle
@@ -118,10 +118,36 @@ def Convert():
 				y3                = 64+y-32            # Position in raw buffer
 				column1[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
 
+def LoadingWithPath(filePath):
+	global pixels
+	global width
+	global height
+	global gamma
+	global image_list ;
+	print "Loading... "+filePath
+	
+	img       = Image.open(filePath).convert("RGB")
+	# img       = Image.open("arrow-01.png").convert("RGB")
+	pixels    = img.load()
+	
+	width     = img.size[0]
+	height    = img.size[1]
+	print "%dx%d pixels" % img.size
+	# Calculate gamma correction table, makes mid-range colors look 'right':
+	gamma = bytearray(256)
+	for i in range(256):
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  + 0.5)
+		# print str(i) + " : gamma " + str(gamma[i]) 
+
 
 def init():
 	
 	Loading()
+	Allocate()
+	Convert()
+
+def reset(filePath):
+	LoadingWithPath(filePath)
 	Allocate()
 	Convert()
 
@@ -140,6 +166,9 @@ def change_image_callback(path, tags, args, source):
 	# args is a OSCMessage with data
 	# source is where the message came from (in case you need to reply)
 	print ("Now do something with",args[0]) 
+	global fileNameArg 
+	fileNameArg = args[0]
+
 
 
 def change_speed_callback(path, tags, args, source):
@@ -183,7 +212,11 @@ if __name__ == "__main__":
 	atexit.register(on_exit, server, client);
 	# atexit.register(on_exit, client);
 	while True:                            # Loop forever
-		for x in range(width):         # For each column1 of image...
-			client.put_pixels(column1[x])  # Write raw data to strip
-			time.sleep(0.0005)
+		if fileNameArg != "":
+			reset(fileNameArg)
+			fileNameArg = ""
+		else:
+			for x in range(width):         # For each column1 of image...
+				client.put_pixels(column1[x])  # Write raw data to strip
+				time.sleep(0.0005)
 	
