@@ -80,7 +80,7 @@ def Loading():
 	# Calculate gamma correction table, makes mid-range colors look 'right':
 	gamma = bytearray(256)
 	for i in range(256):
-		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  + 0.5)
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0 * 0.3  + 0.5)
 		# print str(i) + " : gamma " + str(gamma[i]) 
 
 
@@ -115,7 +115,7 @@ def Convert():
 				column1[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
 			else:
 				value             = pixels[x, y]    # Read pixel in image
-				y3                = 64+y-32            # Position in raw buffer
+				y3                = 60+y-32            # Position in raw buffer
 				column1[x][y3]     = (gamma[value[0]], gamma[value[1]], gamma[value[2]])
 
 def LoadingWithPath(filePath):
@@ -136,7 +136,7 @@ def LoadingWithPath(filePath):
 	# Calculate gamma correction table, makes mid-range colors look 'right':
 	gamma = bytearray(256)
 	for i in range(256):
-		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0  + 0.5)
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0*0.3  + 0.5)
 		# print str(i) + " : gamma " + str(gamma[i]) 
 
 
@@ -168,6 +168,12 @@ def change_image_callback(path, tags, args, source):
 	print ("Now do something with",args[0]) 
 	global fileNameArg 
 	fileNameArg = args[0]
+
+def off_callback(path, tags, args, source):
+	print ("off",args[0]) 
+	global fileNameArg 
+	fileNameArg = "off"
+	
 
 
 
@@ -205,6 +211,7 @@ if __name__ == "__main__":
 	init()
 	server.addMsgHandler( "/change_image", change_image_callback )
 	server.addMsgHandler( "/change_speed", change_speed_callback )
+	server.addMsgHandler( "/off", off_callback )
 
 	# print server
 	thread.start_new_thread(each_frame, (server,))
@@ -212,9 +219,13 @@ if __name__ == "__main__":
 	atexit.register(on_exit, server, client);
 	# atexit.register(on_exit, client);
 	while True:                            # Loop forever
-		if fileNameArg != "":
+		if fileNameArg != "" and fileNameArg != "off":
 			reset(fileNameArg)
 			fileNameArg = ""
+		elif fileNameArg == "off":
+			for x in range(width):         # For each column1 of image...
+				client.put_pixels([ (0,0,0) ]*(int)(128))  # Write raw data to strip
+				time.sleep(0.0005)
 		else:
 			for x in range(width):         # For each column1 of image...
 				client.put_pixels(column1[x])  # Write raw data to strip
