@@ -9,8 +9,8 @@ void ofApp::setup(){
     
     
     // Connect to the fcserver
-//    opcClient.setup("10.0.1.14", 7890);
-    opcClient.setup("127.0.0.1", 7890);
+    opcClient.setup("10.0.1.14", 7890);
+//    opcClient.setup("127.0.0.1", 7890);
     
     // You define the stage size and draw into the stage
     opcClient.setupStage(500, 500);
@@ -48,7 +48,7 @@ void ofApp::threadedFunction(){
                     vector<ofColor>   sub(&c[i][0],&c[i][31]);
                     vector<ofColor>   sub2(&c[i][32],&c[i][63]);
                     opcClient.writeChannelOne(sub);
-                    opcClient.writeChannelOne(sub2);
+                    opcClient.writeChannelTwo(sub);
                     ofSleepMillis(step);
                     
                 }
