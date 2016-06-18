@@ -49,7 +49,7 @@ height = 0
 pixels = []
 gamma = []
 column1 = []
-
+brightness = 0.5
 image_list = 0
 def on_exit(server,client):
 # def on_exit(client):
@@ -80,7 +80,7 @@ def Loading():
 	# Calculate gamma correction table, makes mid-range colors look 'right':
 	gamma = bytearray(256)
 	for i in range(256):
-		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0 * 0.3  + 0.5)
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0 * brightness  + 0.5)
 		# print str(i) + " : gamma " + str(gamma[i]) 
 
 
@@ -136,7 +136,7 @@ def LoadingWithPath(filePath):
 	# Calculate gamma correction table, makes mid-range colors look 'right':
 	gamma = bytearray(256)
 	for i in range(256):
-		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0*0.3  + 0.5)
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0* brightness  + 0.5)
 		# print str(i) + " : gamma " + str(gamma[i]) 
 
 
@@ -173,6 +173,11 @@ def off_callback(path, tags, args, source):
 	print ("off",args[0]) 
 	global fileNameArg 
 	fileNameArg = "off"
+
+def brightness_callback(path, tags, args, source):
+	print ("brightness_callback",args[0]) 
+	global brightness 
+	brightness = args[0]
 	
 
 
@@ -211,6 +216,7 @@ if __name__ == "__main__":
 	init()
 	server.addMsgHandler( "/change_image", change_image_callback )
 	server.addMsgHandler( "/change_speed", change_speed_callback )
+	server.addMsgHandler( "/brightness", brightness_callback )
 	server.addMsgHandler( "/off", off_callback )
 
 	# print server
