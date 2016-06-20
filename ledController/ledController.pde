@@ -13,7 +13,7 @@ void setup() {
   size(800, 400);
   frameRate(25);
   oscP5 = new OscP5(this, 3333);
-  myRemoteLocation = new NetAddress("127.0.0.1", 7110);
+  myRemoteLocation = new NetAddress("10.0.1.16", 7110);
 
 
   PFont font = createFont("arial", 20);
@@ -41,7 +41,7 @@ void setup() {
     .setSize(80, 40)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
     ;  
-  cp5.get(Textfield.class, "ipAddress").setText("0.0.0.0");
+  cp5.get(Textfield.class, "ipAddress").setText("10.0.1.16");
 
   cp5.addSlider("brightness")
     .setPosition(x, y+100)
@@ -54,8 +54,8 @@ void setup() {
      cp5.addSlider("speed")
     .setPosition(x, y+120)
     .setWidth(200)
-    .setRange(0, 1.0) // values can range from big to small as well
-    .setValue(0.0005)
+    .setRange(0, 0.005) // values can range from big to small as well
+    .setValue(0.00005)
     //.setNumberOfTickMarks(10)
     //.setSliderMode(Slider.FLEXIBLE)
     ;
