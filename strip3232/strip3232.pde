@@ -21,8 +21,9 @@ void setup()
   // Load a sample image
   im = loadImage("hello-01.png");
 
-  // Connect to the local instance of fcserver
-  opc = new OPC(this, "10.0.1.9", 7890);
+  // Connect to the local instanc0e of fcserver
+  //opc = new OPC(this, "10.0.1.9", 7890);
+  opc = new OPC(this, "10.0.1.16", 7890);
   //opc = new OPC(this, "127.0.0.1", 7890);
   opc.setStatusLed(true);
   // Map one 64-LED strip to the center of the window
