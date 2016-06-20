@@ -27,7 +27,7 @@ client = opc.Client('localhost:7890')
 
 # numLEDs = 64
 fileNameArg = ""
-filename  = "arrow-01.png" # Image file to load
+filename  = "onepix.png" # Image file to load
 # Notice the number of LEDs is set to 0.  This is on purpose...we're asking
 # the DotStar module to NOT allocate any memory for this strip...we'll handle
 # our own allocation and conversion and will feed it 'raw' data.
