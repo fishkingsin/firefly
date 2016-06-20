@@ -67,11 +67,11 @@ def Loading():
 	global gamma
 	global image_list ;
 	print "Loading..."
-	image_list  = [f for f in os.listdir('.') if os.path.isfile(f)  if  f.endswith(".png") ]
-	for f in image_list:
-		print "file  : " + f
-	img       = Image.open(random.choice(image_list)).convert("RGB")
-	# img       = Image.open("arrow-01.png").convert("RGB")
+	# image_list  = [f for f in os.listdir('.') if os.path.isfile(f)  if  f.endswith(".png") ]
+	# for f in image_list:
+	# 	print "file  : " + f
+	# img       = Image.open(random.choice(image_list)).convert("RGB")
+	img       = Image.open(filename).convert("RGB")
 	pixels    = img.load()
 	
 	width     = img.size[0]
@@ -207,7 +207,7 @@ def each_frame(server):
 		print errtxt
 
 
-
+speed = 0.0005
 def each_frame_led(client):
 	print "Displaying..."
 	
@@ -224,6 +224,7 @@ if __name__ == "__main__":
 	# thread.start_new_thread(each_frame_led, (client,))
 	atexit.register(on_exit, server, client);
 	# atexit.register(on_exit, client);
+	
 	while True:                            # Loop forever
 		if fileNameArg != "" and fileNameArg != "off":
 			reset(fileNameArg)
@@ -231,9 +232,9 @@ if __name__ == "__main__":
 		elif fileNameArg == "off":
 			for x in range(width):         # For each column1 of image...
 				client.put_pixels([ (0,0,0) ]*(int)(128))  # Write raw data to strip
-				time.sleep(0.0005)
+				time.sleep(speed)
 		else:
 			for x in range(width):         # For each column1 of image...
 				client.put_pixels(column1[x])  # Write raw data to strip
-				time.sleep(0.0005)
+				time.sleep(speed)
 	
