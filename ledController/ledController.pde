@@ -45,11 +45,19 @@ void setup() {
 
   cp5.addSlider("brightness")
     .setPosition(x, y+100)
-    .setWidth(400)
+    .setWidth(200)
     .setRange(0, 1.0) // values can range from big to small as well
     .setValue(0.5)
     .setNumberOfTickMarks(10)
     .setSliderMode(Slider.FLEXIBLE)
+    ;
+     cp5.addSlider("speed")
+    .setPosition(x, y+120)
+    .setWidth(200)
+    .setRange(0, 1.0) // values can range from big to small as well
+    .setValue(0.0005)
+    //.setNumberOfTickMarks(10)
+    //.setSliderMode(Slider.FLEXIBLE)
     ;
   cp5.addScrollableList("dropdown")
     .setPosition(x, y+200)
@@ -110,6 +118,13 @@ public void brightness(float b){
   OscMessage myMessage = new OscMessage("/brightness");
   
   myMessage.add(b); 
+  /* send the message */
+  oscP5.send(myMessage, myRemoteLocation);
+}
+public void speed(float s){
+  OscMessage myMessage = new OscMessage("/change_speed");
+  
+  myMessage.add(s); 
   /* send the message */
   oscP5.send(myMessage, myRemoteLocation);
 }

@@ -197,7 +197,8 @@ def change_speed_callback(path, tags, args, source):
 	# args is a OSCMessage with data
 	# source is where the message came from (in case you need to reply)
 	print ("Now do something with",args[0]) 
-
+	global speed
+	speed = args[0]
 
 
 def each_frame(server):
@@ -228,8 +229,9 @@ if __name__ == "__main__":
 	# thread.start_new_thread(each_frame_led, (client,))
 	atexit.register(on_exit, server, client);
 	# atexit.register(on_exit, client);
-
+	
 	while True:                            # Loop forever
+		global speed
 		if fileNameArg != "" and fileNameArg != "off":
 			reset(fileNameArg)
 			fileNameArg = ""
