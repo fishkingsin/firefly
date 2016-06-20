@@ -43,13 +43,23 @@ void setup() {
     ;  
   cp5.get(Textfield.class, "ipAddress").setText("0.0.0.0");
 
-  cp5.addScrollableList("dropdown")
+  cp5.addSlider("brightness")
     .setPosition(x, y+100)
+    .setWidth(400)
+    .setRange(0, 1.0) // values can range from big to small as well
+    .setValue(0.5)
+    .setNumberOfTickMarks(10)
+    .setSliderMode(Slider.FLEXIBLE)
+    ;
+  cp5.addScrollableList("dropdown")
+    .setPosition(x, y+200)
     .setSize(200, 200)
     .setBarHeight(20)
     .setItemHeight(20)
     // .setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
     ;
+
+
   selectFolder("choose a folder containing images", "selectedFile");
 }
 void selectedFile(File selection) {
@@ -61,7 +71,7 @@ void selectedFile(File selection) {
 
       println("Folder does not exist or cannot be accessed.");
     } else {
-      //println(list);
+      //println(list); //<>//
 
       ScrollableList l = cp5.get(ScrollableList.class, "dropdown");
       for (String item : list ) {
@@ -71,7 +81,7 @@ void selectedFile(File selection) {
         }
       }
     }
-  } //<>//
+  }
 }
 void dropdown(int n) {
   /* request the selected item based on index n */
@@ -96,7 +106,13 @@ void dropdown(int n) {
   oscP5.send(myMessage, myRemoteLocation);
   image = loadImage(file+"/"+value);
 }
-
+public void brightness(float b){
+  OscMessage myMessage = new OscMessage("/brightness");
+  
+  myMessage.add(b); 
+  /* send the message */
+  oscP5.send(myMessage, myRemoteLocation);
+}
 void draw() {
   background(0);
   //fill(255);
@@ -111,7 +127,7 @@ public void clear() {
 }
 public void off() {
   OscMessage myMessage = new OscMessage("/off");
- 
+
   myMessage.add("off"); 
   /* send the message */
   oscP5.send(myMessage, myRemoteLocation);

@@ -178,6 +178,10 @@ def brightness_callback(path, tags, args, source):
 	print ("brightness_callback",args[0]) 
 	global brightness 
 	brightness = args[0]
+
+	for i in range(256):
+		gamma[i] = int(pow(float(i) / 255.0, 2.7) * 255.0 * brightness  + 0.5)
+	Convert();
 	
 
 
@@ -224,7 +228,7 @@ if __name__ == "__main__":
 	# thread.start_new_thread(each_frame_led, (client,))
 	atexit.register(on_exit, server, client);
 	# atexit.register(on_exit, client);
-	
+
 	while True:                            # Loop forever
 		if fileNameArg != "" and fileNameArg != "off":
 			reset(fileNameArg)
