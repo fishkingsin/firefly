@@ -212,7 +212,7 @@ def each_frame(server):
 		print errtxt
 
 
-speed = 0.0005
+speed = 0.005
 def each_frame_led(client):
 	print "Displaying..."
 	
@@ -231,7 +231,7 @@ if __name__ == "__main__":
 	# atexit.register(on_exit, client);
 	
 	while True:                            # Loop forever
-		global speed
+		
 		if fileNameArg != "" and fileNameArg != "off":
 			reset(fileNameArg)
 			fileNameArg = ""

@@ -10,7 +10,7 @@ String textValue = "";
 PImage image;
 File file;
 void setup() {
-  size(800, 400);
+  size(800, 800);
   frameRate(25);
   oscP5 = new OscP5(this, 3333);
   myRemoteLocation = new NetAddress("10.0.1.16", 7110);
