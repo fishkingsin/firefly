@@ -11,7 +11,7 @@ void ofApp::setup(){
     
 #if USE_EDSDK
     camera.setup();
-#endif
+#else
     vector<ofVideoDevice> devices = videoGrabber.listDevices();
     
     for(int i = 0; i < devices.size(); i++){
@@ -26,6 +26,10 @@ void ofApp::setup(){
     videoGrabber.setDeviceID(0);
     
     videoGrabber.initGrabber(640,480);
+    ofPixels pixels;
+    pixels.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
+    rgbaFboFloat.readToPixels(pixels);
+#endif
 #ifdef TARGET_OPENGLES
     rgbaFboFloat.allocate(640, 480, GL_RGBA ); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
     ofLogWarning("ofApp") << "GL_RGBA32F_ARB is not available for OPENGLES.  Using RGBA.";
@@ -36,12 +40,11 @@ void ofApp::setup(){
     ofClear(0,0,0, 255);
     rgbaFboFloat.end();
     
-    videoTexture.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
-    ofPixels pixels;
-    pixels.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
-    rgbaFboFloat.readToPixels(pixels);
     
-    videoTexture.loadData(pixels);
+    
+    
+    
+    
     
     if(ofIsGLProgrammableRenderer()){
         string vertex = "#version 150\n\
@@ -119,24 +122,28 @@ void ofApp::update(){
     if(camera.isFrameNew()) {
         
         ofPixels pixels = camera.getLivePixels();
-        
+        if(!videoTexture.isAllocated()){
+            videoTexture.allocate(camera.getWidth(), camera.getHeight(), OF_PIXELS_RGBA);
+        }
         videoTexture.loadData(pixels);
         
         
     }
-    else
-#endif
+#else
     {
         
-//        videoGrabber.update();
-//        
-//        if(videoGrabber.isFrameNew()){
-//            ofPixels & pixels = videoGrabber.getPixels();
-//            
-//            videoTexture.loadData(pixels);
-//        }
+        videoGrabber.update();
+        
+        if(videoGrabber.isFrameNew()){
+            ofPixels & pixels = videoGrabber.getPixels();
+            if(!videoTexture.isAllocated()){
+                videoTexture.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
+            }
+            videoTexture.loadData(pixels);
+        }
         
     }
+#endif
     rgbaFboFloat.begin();
     
     if(ofGetKeyPressed('1')){
@@ -161,7 +168,7 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     rgbaFboFloat.draw(0,0,ofGetWidth(), ofGetHeight());
-    //    videoTexture.draw(0,0, ofGetWidth(), ofGetHeight());
+        videoTexture.draw(0,0, 320,240);
 }
 
 //--------------------------------------------------------------
@@ -170,7 +177,9 @@ void ofApp::keyPressed(int key){
         ofToggleFullscreen();
     }
     if(key == 's' || key == 'S'){
+#ifndef USE_EDSDK
         videoGrabber.videoSettings();
+#endif
     }
     
 }

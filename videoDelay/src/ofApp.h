@@ -31,9 +31,11 @@ public:
     ofFbo rgbaFboFloat; // with alpha
     
     int fadeAmnt;
-    ofVideoGrabber videoGrabber;
+    
 #if USE_EDSDK
     ofxEdsdk::Camera camera;
+#else
+    ofVideoGrabber videoGrabber;
 #endif
     ofTexture videoTexture;
     

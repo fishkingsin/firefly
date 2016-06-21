@@ -9,11 +9,16 @@ ControlP5 cp5;
 String textValue = "";
 PImage image;
 File file;
+XML xml;
+
 void setup() {
   size(800, 800);
+  xml = loadXML("settings.xml");
   frameRate(25);
   oscP5 = new OscP5(this, 3333);
-  myRemoteLocation = new NetAddress("10.0.1.16", 7110);
+  
+  XML ip = xml.getChild("address");
+  myRemoteLocation = new NetAddress(ip.getString("ip","10.0.1.16"), 7110);
 
 
   PFont font = createFont("arial", 20);
@@ -41,7 +46,7 @@ void setup() {
     .setSize(80, 40)
     .getCaptionLabel().align(ControlP5.CENTER, ControlP5.CENTER)
     ;  
-  cp5.get(Textfield.class, "ipAddress").setText("10.0.1.16");
+  cp5.get(Textfield.class, "ipAddress").setText(ip.getString("ip","10.0.1.16"));
 
   cp5.addSlider("brightness")
     .setPosition(x, y+100)
@@ -148,7 +153,11 @@ public void off() {
   oscP5.send(myMessage, myRemoteLocation);
 }
 public void OK() {
-  myRemoteLocation = new NetAddress(cp5.get(Textfield.class, "ipAddress").getText(), 7110);
+  String address = cp5.get(Textfield.class, "ipAddress").getText();
+  myRemoteLocation = new NetAddress(address, 7110);
+  XML ip = xml.getChild("address");
+  ip.setString("ip",address);
+  saveXML(xml, "settings.xml");
 }
 
 /* incoming osc message are forwarded to the oscEvent method. */
