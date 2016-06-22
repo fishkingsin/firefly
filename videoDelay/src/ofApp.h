@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxEdsdk.h"
+#include "ofxSyphon.h"
 #define USE_EDSDK 1
 
 using namespace ofxEdsdk;
@@ -46,4 +47,12 @@ public:
     int current_msg_string;
     string msg_strings[NUM_MSG_STRINGS];
     float timers[NUM_MSG_STRINGS];
+    
+    void serverAnnounced(ofxSyphonServerDirectoryEventArgs &arg);
+    void serverUpdated(ofxSyphonServerDirectoryEventArgs &args);
+    void serverRetired(ofxSyphonServerDirectoryEventArgs &arg);
+    
+    ofxSyphonServerDirectory dir;
+    ofxSyphonClient client;
+    int dirIdx;
 };

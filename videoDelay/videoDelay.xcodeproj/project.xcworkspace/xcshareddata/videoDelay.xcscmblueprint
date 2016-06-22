@@ -5,11 +5,13 @@
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "36985836DF35EF8F5D7D4E20C1E7B9D301114BDF" : 0,
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : 0,
     "542AA5F01D83C433FCB907EF0BEAE697C6036640" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6CAC9446-3240-4E32-B50D-8E97E1CFA03D",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "36985836DF35EF8F5D7D4E20C1E7B9D301114BDF" : "..\/addons\/ofxEdsdk",
+    "F4CCB893AFADB97238A965FD2F28717F1CAAE613" : "..\/addons\/ofxSyphon",
     "542AA5F01D83C433FCB907EF0BEAE697C6036640" : "fireFlyP5\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "videoDelay",
@@ -25,6 +27,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:fishkingsin\/fireFlyP5.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "542AA5F01D83C433FCB907EF0BEAE697C6036640"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/astellato\/ofxSyphon.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "F4CCB893AFADB97238A965FD2F28717F1CAAE613"
     }
   ]
 }

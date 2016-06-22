@@ -36,9 +36,9 @@ void ofApp::setup(){
 #else
     //    rgbaFboFloat.allocate(640, 480, GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
 #endif
-//    rgbaFboFloat.begin();
-//    ofClear(0,0,0, 255);
-//    rgbaFboFloat.end();
+    //    rgbaFboFloat.begin();
+    //    ofClear(0,0,0, 255);
+    //    rgbaFboFloat.end();
     
     
     
@@ -96,11 +96,23 @@ void ofApp::setup(){
         vec3 src = texture2DRect(tex0, pos).rgb;\
         float mask = (src.g+src.r+src.b)/3.0f;\
         \
-        gl_FragColor = vec4( src , (mask>0.8f)?1.0f:0.0f);\
+        gl_FragColor = vec4( src , (mask>0.8f)?mask:0.0f);\
         }";
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderProgram);
         shader.linkProgram();
     }
+    //setup our directory
+    dir.setup();
+    //setup our client
+    client.setup();
+    
+    //register for our directory's callbacks
+    ofAddListener(dir.events.serverAnnounced, this, &ofApp::serverAnnounced);
+    // not yet implemented
+    //ofAddListener(dir.events.serverUpdated, this, &ofApp::serverUpdated);
+    ofAddListener(dir.events.serverRetired, this, &ofApp::serverRetired);
+    
+    dirIdx = -1;
 }
 
 void ofApp::exit() {
@@ -108,6 +120,31 @@ void ofApp::exit() {
     camera.close();
 #endif
     
+}
+
+//these are our directory's callbacks
+void ofApp::serverAnnounced(ofxSyphonServerDirectoryEventArgs &arg)
+{
+    for( auto& dir : arg.servers ){
+        ofLogNotice("ofxSyphonServerDirectory Server Announced")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
+    }
+    dirIdx = 0;
+}
+
+void ofApp::serverUpdated(ofxSyphonServerDirectoryEventArgs &arg)
+{
+    for( auto& dir : arg.servers ){
+        ofLogNotice("ofxSyphonServerDirectory Server Updated")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
+    }
+    dirIdx = 0;
+}
+
+void ofApp::serverRetired(ofxSyphonServerDirectoryEventArgs &arg)
+{
+    for( auto& dir : arg.servers ){
+        ofLogNotice("ofxSyphonServerDirectory Server Retired")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
+    }
+    dirIdx = 0;
 }
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -128,7 +165,7 @@ void ofApp::update(){
             rgbaFboFloat.begin();
             ofClear(0,0,0, 255);
             rgbaFboFloat.end();
-
+            
         }
         videoTexture.loadData(pixels);
         
@@ -179,8 +216,9 @@ void ofApp::draw(){
     ofBackground(0);
     if(rgbaFboFloat.isAllocated()){
         rgbaFboFloat.draw(0,0,ofGetWidth(), ofGetHeight());
-        videoTexture.draw(0,0, 320,240);
+        //        videoTexture.draw(0,0, 320,240);
     }
+    client.draw(0,0,ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
@@ -192,6 +230,30 @@ void ofApp::keyPressed(int key){
 #ifndef USE_EDSDK
         videoGrabber.videoSettings();
 #endif
+    }
+    
+    //press any key to move through all available Syphon servers
+    if (dir.size() > 0)
+    {
+        dirIdx++;
+        if(dirIdx > dir.size() - 1)
+            dirIdx = 0;
+        
+        client.set(dir.getDescription(dirIdx));
+        string serverName = client.getServerName();
+        string appName = client.getApplicationName();
+        
+        if(serverName == ""){
+            serverName = "null";
+        }
+        if(appName == ""){
+            appName = "null";
+        }
+        ofSetWindowTitle(serverName + ":" + appName);
+    }
+    else
+    {
+        ofSetWindowTitle("No Server");
     }
     
 }
