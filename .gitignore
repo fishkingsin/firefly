@@ -15,3 +15,5 @@ python/images
 python/ai
 python/rpi
 FireflyController.xcscmblueprint
+ledController/application.macosx
+sketch.properties

@@ -34,11 +34,11 @@ void ofApp::setup(){
     rgbaFboFloat.allocate(640, 480, GL_RGBA ); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
     ofLogWarning("ofApp") << "GL_RGBA32F_ARB is not available for OPENGLES.  Using RGBA.";
 #else
-    rgbaFboFloat.allocate(640, 480, GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
+    //    rgbaFboFloat.allocate(640, 480, GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
 #endif
-    rgbaFboFloat.begin();
-    ofClear(0,0,0, 255);
-    rgbaFboFloat.end();
+//    rgbaFboFloat.begin();
+//    ofClear(0,0,0, 255);
+//    rgbaFboFloat.end();
     
     
     
@@ -104,7 +104,7 @@ void ofApp::setup(){
 }
 
 void ofApp::exit() {
-    #if USE_EDSDK
+#if USE_EDSDK
     camera.close();
 #endif
     
@@ -118,12 +118,17 @@ void ofApp::update(){
     //lets draw some graphics into our two fbos
     camera.update();
     
-
+    
     if(camera.isFrameNew()) {
         
         ofPixels pixels = camera.getLivePixels();
         if(!videoTexture.isAllocated()){
             videoTexture.allocate(camera.getWidth(), camera.getHeight(), OF_PIXELS_RGBA);
+            rgbaFboFloat.allocate(camera.getWidth(), camera.getHeight(), GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
+            rgbaFboFloat.begin();
+            ofClear(0,0,0, 255);
+            rgbaFboFloat.end();
+
         }
         videoTexture.loadData(pixels);
         
@@ -138,37 +143,44 @@ void ofApp::update(){
             ofPixels & pixels = videoGrabber.getPixels();
             if(!videoTexture.isAllocated()){
                 videoTexture.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
+                rgbaFboFloat.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
+                
             }
             videoTexture.loadData(pixels);
         }
         
     }
 #endif
-    rgbaFboFloat.begin();
-    
-    if(ofGetKeyPressed('1')){
-        fadeAmnt = 0;
-    }else if(ofGetKeyPressed('2')){
-        fadeAmnt = 1;
-    }else if(ofGetKeyPressed('3')){
-        fadeAmnt = 2;
+    if(rgbaFboFloat.isAllocated()){
+        rgbaFboFloat.begin();
+        
+        if(ofGetKeyPressed('1')){
+            fadeAmnt = 0;
+        }else if(ofGetKeyPressed('2')){
+            fadeAmnt = 1;
+        }else if(ofGetKeyPressed('3')){
+            fadeAmnt = 2;
+        }
+        else if(ofGetKeyPressed('4')){
+            fadeAmnt = 256;
+        }
+        ofSetColor(0, fadeAmnt);
+        ofDrawRectangle(0, 0, rgbaFboFloat.getWidth(), rgbaFboFloat.getHeight());
+        shader.begin();
+        ofSetColor(255);
+        videoTexture.draw(0, 0);
+        shader.end();
+        rgbaFboFloat.end();
     }
-    else if(ofGetKeyPressed('4')){
-        fadeAmnt = 256;
-    }
-    ofSetColor(0, fadeAmnt);
-    ofDrawRectangle(0, 0, rgbaFboFloat.getWidth(), rgbaFboFloat.getHeight());
-    shader.begin();
-    videoTexture.draw(0, 0);
-    shader.end();
-    rgbaFboFloat.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(0);
-    rgbaFboFloat.draw(0,0,ofGetWidth(), ofGetHeight());
+    if(rgbaFboFloat.isAllocated()){
+        rgbaFboFloat.draw(0,0,ofGetWidth(), ofGetHeight());
         videoTexture.draw(0,0, 320,240);
+    }
 }
 
 //--------------------------------------------------------------

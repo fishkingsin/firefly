@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
-  <address ip="10.0.1.16">led1</address>
+  <address ip="10.0.1.2">led1</address>
 </settings>
