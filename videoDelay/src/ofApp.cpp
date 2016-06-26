@@ -2,12 +2,16 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetFrameRate(60);
+    ofSetFrameRate(120);
     receiver.setup(PORT);
     
     current_msg_string = 0;
     
     ofSetLogLevel(OF_LOG_VERBOSE);
+    
+    
+    server.setName("Video Delay");
+   
     
 #if USE_EDSDK
     camera.setup();
@@ -68,6 +72,7 @@ void ofApp::setup(){
         \n\
         uniform sampler2DRect tex0;\
         uniform sampler2DRect maskTex;\
+        uniform float filter = 0.5f;\
         in vec2 texCoordVarying;\n\
         \
         out vec4 fragColor;\n\
@@ -89,6 +94,7 @@ void ofApp::setup(){
         \
         uniform sampler2DRect tex0;\
         uniform sampler2DRect maskTex;\
+        uniform float filter = 0.5f;\
         \
         void main (void){\
         vec2 pos = gl_TexCoord[0].st;\
@@ -96,23 +102,13 @@ void ofApp::setup(){
         vec3 src = texture2DRect(tex0, pos).rgb;\
         float mask = (src.g+src.r+src.b)/3.0f;\
         \
-        gl_FragColor = vec4( src , (mask>0.8f)?mask:0.0f);\
+        gl_FragColor = vec4( src , (mask>filter)?mask:0.0f);\
         }";
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderProgram);
         shader.linkProgram();
     }
     //setup our directory
-    dir.setup();
-    //setup our client
-    client.setup();
     
-    //register for our directory's callbacks
-    ofAddListener(dir.events.serverAnnounced, this, &ofApp::serverAnnounced);
-    // not yet implemented
-    //ofAddListener(dir.events.serverUpdated, this, &ofApp::serverUpdated);
-    ofAddListener(dir.events.serverRetired, this, &ofApp::serverRetired);
-    
-    dirIdx = -1;
 }
 
 void ofApp::exit() {
@@ -122,32 +118,21 @@ void ofApp::exit() {
     
 }
 
-//these are our directory's callbacks
-void ofApp::serverAnnounced(ofxSyphonServerDirectoryEventArgs &arg)
-{
-    for( auto& dir : arg.servers ){
-        ofLogNotice("ofxSyphonServerDirectory Server Announced")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
-    }
-    dirIdx = 0;
-}
-
-void ofApp::serverUpdated(ofxSyphonServerDirectoryEventArgs &arg)
-{
-    for( auto& dir : arg.servers ){
-        ofLogNotice("ofxSyphonServerDirectory Server Updated")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
-    }
-    dirIdx = 0;
-}
-
-void ofApp::serverRetired(ofxSyphonServerDirectoryEventArgs &arg)
-{
-    for( auto& dir : arg.servers ){
-        ofLogNotice("ofxSyphonServerDirectory Server Retired")<<" Server Name: "<<dir.serverName <<" | App Name: "<<dir.appName;
-    }
-    dirIdx = 0;
-}
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+    while(receiver.hasWaitingMessages()){
+        // get the next message
+        ofxOscMessage m;
+        receiver.getNextMessage(m);
+        // check for mouse moved message
+        if(m.getAddress() == "/fade"){
+            fadeAmnt = m.getArgAsInt(0);
+        }
+        if(m.getAddress() == "/filter"){
+            filter = m.getArgAsFloat(0);
+        }
+    }
     // check for waiting messages
     
     ofEnableAlphaBlending();
@@ -181,7 +166,9 @@ void ofApp::update(){
             if(!videoTexture.isAllocated()){
                 videoTexture.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), OF_PIXELS_RGBA);
                 rgbaFboFloat.allocate(videoGrabber.getWidth(), videoGrabber.getHeight(), GL_RGBA32F_ARB); // with alpha, 32 bits red, 32 bits green, 32 bits blue, 32 bits alpha, from 0 to 1 in 'infinite' steps
-                
+                rgbaFboFloat.begin();
+                ofClear(0,0,0, 255);
+                rgbaFboFloat.end();
             }
             videoTexture.loadData(pixels);
         }
@@ -204,6 +191,7 @@ void ofApp::update(){
         ofSetColor(0, fadeAmnt);
         ofDrawRectangle(0, 0, rgbaFboFloat.getWidth(), rgbaFboFloat.getHeight());
         shader.begin();
+        shader.setUniform1f("filter", filter);
         ofSetColor(255);
         videoTexture.draw(0, 0);
         shader.end();
@@ -218,7 +206,7 @@ void ofApp::draw(){
         rgbaFboFloat.draw(0,0,ofGetWidth(), ofGetHeight());
         //        videoTexture.draw(0,0, 320,240);
     }
-    client.draw(0,0,ofGetWidth(), ofGetHeight());
+    server.publishScreen();
 }
 
 //--------------------------------------------------------------
@@ -232,29 +220,6 @@ void ofApp::keyPressed(int key){
 #endif
     }
     
-    //press any key to move through all available Syphon servers
-    if (dir.size() > 0)
-    {
-        dirIdx++;
-        if(dirIdx > dir.size() - 1)
-            dirIdx = 0;
-        
-        client.set(dir.getDescription(dirIdx));
-        string serverName = client.getServerName();
-        string appName = client.getApplicationName();
-        
-        if(serverName == ""){
-            serverName = "null";
-        }
-        if(appName == ""){
-            appName = "null";
-        }
-        ofSetWindowTitle(serverName + ":" + appName);
-    }
-    else
-    {
-        ofSetWindowTitle("No Server");
-    }
     
 }
 

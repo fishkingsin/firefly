@@ -4,10 +4,10 @@
 #include "ofxOsc.h"
 #include "ofxEdsdk.h"
 #include "ofxSyphon.h"
-#define USE_EDSDK 1
+#define USE_EDSDK 0
 
 using namespace ofxEdsdk;
-#define PORT 53000
+#define PORT 3333
 #define NUM_MSG_STRINGS 20
 class ofApp : public ofBaseApp{
     
@@ -48,11 +48,7 @@ public:
     string msg_strings[NUM_MSG_STRINGS];
     float timers[NUM_MSG_STRINGS];
     
-    void serverAnnounced(ofxSyphonServerDirectoryEventArgs &arg);
-    void serverUpdated(ofxSyphonServerDirectoryEventArgs &args);
-    void serverRetired(ofxSyphonServerDirectoryEventArgs &arg);
+    ofxSyphonServer server;
     
-    ofxSyphonServerDirectory dir;
-    ofxSyphonClient client;
-    int dirIdx;
+    float filter;
 };
