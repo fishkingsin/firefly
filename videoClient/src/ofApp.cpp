@@ -58,7 +58,9 @@ void ofApp::update(){
             string serverName = m.getArgAsString(0);
             string applicationName = m.getArgAsString(1);
             for( auto& dir : dir.getServerList() ){
-                if(serverName.compare(dir.serverName)==0 && applicationName.compare(dir.appName)){
+                string servName = dir.serverName;
+                string appName = dir.appName;
+                if(serverName.compare(servName)==0 && applicationName.compare(appName) == 0 ){
                     client.set(serverName,applicationName);
                 }
             }
