@@ -1,5 +1,5 @@
 #include "ofApp.h"
-
+int gravity = -1;
 //--------------------------------------------------------------
 void ofApp::setup() {
     svg.load("shape.svg");
@@ -8,18 +8,18 @@ void ofApp::setup() {
     ofSetLogLevel(OF_LOG_NOTICE);
     
     box2d.init();
-    box2d.setGravity(0, -1);
+    box2d.setGravity(0, gravity);
     box2d.setFPS(30.0);
     
     box2d.registerGrabbing();
     int extend = 100;
     box2d.createBounds(0,-extend*0.5,ofGetWidth(),ofGetHeight()+extend*5);
-    
+    particles.setParticleFlag(b2_waterParticle);
     particles.setup(box2d.getWorld());
     
     for (int i = 0; i < 8000; i++) {
         ofVec2f position = ofVec2f(ofRandomWidth(),
-                                   ofRandomHeight()*0.5);
+                                   ofRandomHeight()*0.2);
         ofVec2f velocity = ofVec2f(0, 0);
         particles.createParticle(position, velocity);
     }
@@ -52,6 +52,15 @@ void ofApp::setup() {
     
     
     
+//    for(int j = 0 ; j < 500 ; j++){
+//        circles.push_back(ofPtr<ofxBox2dCircle>(new ofxBox2dCircle));
+//        circles.back().get()->setPhysics(0, 0.0, 0);
+//        circles.back().get()->setup(box2d.getWorld(), ofRandomWidth(),ofRandomHeight()*0.2  , 10);
+//
+//    }
+    
+    
+    
     
     
 }
@@ -75,9 +84,11 @@ void ofApp::draw() {
         ofSetHexColor(0xBF2545);
         boxes[i].get()->draw();
     }
+    ofSetColor(ofColor::white);
+    particles.draw();
     if(drawParticle){
         particles.draw();
-        ofSetColor(ofColor::yellow);
+        ofSetColor(ofColor::white);
         for(int i = 0 ; i < edges.size() ; i++)
         {
             edges[i]->draw();
@@ -100,7 +111,7 @@ void ofApp::keyPressed(int key) {
     if(key == 'c') {
         float r = ofRandom(4, 20);
         circles.push_back(ofPtr<ofxBox2dCircle>(new ofxBox2dCircle));
-        circles.back().get()->setPhysics(0.9, 0.9, 0.1);
+        circles.back().get()->setPhysics(1, 0.0, 0);
         circles.back().get()->setup(box2d.getWorld(), mouseX, mouseY, r);
     }
     if(key == 'b') {
@@ -111,10 +122,12 @@ void ofApp::keyPressed(int key) {
         boxes.back().get()->setup(box2d.getWorld(), mouseX, mouseY, w, h);
     }
     if(key == OF_KEY_UP){
-        box2d.setGravity(0, -1);
+        gravity--;
+        box2d.setGravity(0, gravity);
     }
     if(key == OF_KEY_DOWN){
-        box2d.setGravity(0, 1);
+        gravity++;
+        box2d.setGravity(0, gravity);
     }
     if(key == 'p'){
         drawParticle = !drawParticle;

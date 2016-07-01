@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxFlowTools.h"
 
-#define USE_PROGRAMMABLE_GL
+//#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
 
@@ -45,10 +45,13 @@ public:
     
     // MouseDraw
     ftDrawMouseForces	mouseForces;
-    ftDrawForce force;
-    
+    vector<ftDrawForce*> forceVs;
+    void setupForce(ofVec2f position , ofVec2f direction, float radius);
     ofImage				flowToolsLogoImage;
     
     void drawComposite(int _x, int _y, int _width, int _height);
+    bool drawText;
+    ofImage image;
     
+    bool showFbo;
 };
