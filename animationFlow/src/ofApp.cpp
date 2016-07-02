@@ -2,8 +2,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofSetFrameRate(60);
+    extend = 50;
     drawWidth = ofGetWidth();
-    drawHeight = ((int)ofGetHeight()*(3.0f/2.0f));
+    drawHeight = ((int)ofGetHeight());
     // process all but the density on 16th resolution
     flowWidth = drawWidth / 4;
     flowHeight = drawHeight / 4;
@@ -24,35 +26,38 @@ void ofApp::setup(){
     // MOUSE DRAW
     mouseForces.setup(flowWidth, flowHeight, drawWidth, drawHeight);
     
-    float foce = 1;
-    setupForce(ofVec2f(ofGetWidth()*0.20,ofGetHeight()*0.1),    ofVec2f(0,foce), 200);
-    setupForce(ofVec2f(50,ofGetHeight()*0.1),                   ofVec2f(foce,0), 200);
-    setupForce(ofVec2f(ofGetWidth()*0.45,ofGetHeight()*0.1),    ofVec2f(-foce,0), 200);
+    float foce = 0.3;
+    float radius = 150;
+    setupForce(ofVec2f(ofGetWidth()*0.25,ofGetHeight()*0.1),    ofVec2f(0,foce), radius);
+    setupForce(ofVec2f(50,ofGetHeight()*0.1),                   ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.45,ofGetHeight()*0.1),    ofVec2f(-foce,0), radius);
     
-    setupForce(ofVec2f(ofGetWidth()*0.2,ofGetHeight()*0.3),    ofVec2f(0,foce*1.5), 100);
-    setupForce(ofVec2f(100,ofGetHeight()*0.3),                   ofVec2f(foce,0), 100);
-    setupForce(ofVec2f(ofGetWidth()*0.40,ofGetHeight()*0.3),    ofVec2f(-foce,0), 100);
-    setupForce(ofVec2f(ofGetWidth()*0.2,ofGetHeight()*0.5),    ofVec2f(0,foce*2), 50);
-    setupForce(ofVec2f(150,ofGetHeight()*0.5),                   ofVec2f(foce,0), 50);
-    setupForce(ofVec2f(ofGetWidth()*0.35,ofGetHeight()*0.5),    ofVec2f(-foce,0), 50);
+    setupForce(ofVec2f(ofGetWidth()*0.25,ofGetHeight()*0.3),    ofVec2f(0,foce*1.5), radius);
+    setupForce(ofVec2f(100,ofGetHeight()*0.3),                   ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.45,ofGetHeight()*0.3),    ofVec2f(-foce,0), radius);
+
+    setupForce(ofVec2f(ofGetWidth()*0.25,ofGetHeight()*0.5),    ofVec2f(0,foce*2), radius);
+    setupForce(ofVec2f(150,ofGetHeight()*0.5),                   ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.35,ofGetHeight()*0.5),    ofVec2f(-foce,0), radius);
+
+    setupForce(ofVec2f(ofGetWidth()*0.75,ofGetHeight()*0.1),    ofVec2f(0,foce), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.1),    ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()-50,ofGetHeight()*0.1),      ofVec2f(-foce,0), radius);
     
-    setupForce(ofVec2f(ofGetWidth()*0.8,ofGetHeight()*0.1),    ofVec2f(0,foce), 200);
-    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.1),    ofVec2f(foce,0), 200);
-    setupForce(ofVec2f(ofGetWidth()-50,ofGetHeight()*0.1),      ofVec2f(-foce,0), 200);
+    setupForce(ofVec2f(ofGetWidth()*0.75,ofGetHeight()*0.3),    ofVec2f(0,foce*1.5), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.3),    ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()-50,ofGetHeight()*0.3),      ofVec2f(-foce,0), radius);
     
-    setupForce(ofVec2f(ofGetWidth()*0.8,ofGetHeight()*0.3),    ofVec2f(0,foce*1.5), 100);
-    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.3),    ofVec2f(foce,0), 100);
-    setupForce(ofVec2f(ofGetWidth()-100,ofGetHeight()*0.3),      ofVec2f(-foce,0), 100);
-    
-    setupForce(ofVec2f(ofGetWidth()*0.8,ofGetHeight()*0.5),    ofVec2f(0,foce*2), 50);
-    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.5),    ofVec2f(foce,0), 50);
-    setupForce(ofVec2f(ofGetWidth()-150,ofGetHeight()*0.5),      ofVec2f(-foce,0), 50);
+    setupForce(ofVec2f(ofGetWidth()*0.75,ofGetHeight()*0.5),    ofVec2f(0,foce*2), radius);
+    setupForce(ofVec2f(ofGetWidth()*0.6,ofGetHeight()*0.5),    ofVec2f(foce,0), radius);
+    setupForce(ofVec2f(ofGetWidth()-150,ofGetHeight()*0.5),      ofVec2f(-foce,0), radius);
     
     
     fbo.allocate(640, 480);
     fbo.black();
     image.load("image.png");
     showFbo = true;
+    tweenlinear.setParameters(7,easinglinear,ofxTween::easeOut,0,255,0,0);
 }
 void ofApp::setupForce(ofVec2f position , ofVec2f direction, float radius){
     ftDrawForce *forceV = new ftDrawForce();
@@ -62,6 +67,9 @@ void ofApp::setupForce(ofVec2f position , ofVec2f direction, float radius){
     forceV->applyForce(position/ofVec2f(ofGetWidth(),ofGetHeight()));
     forceVs.push_back(forceV);
 
+    
+    server.setName("flow");
+    
     
     
 }
@@ -79,10 +87,14 @@ void ofApp::update(){
     if(drawText){
         
         //        drawText = false;
+        ofPushStyle();
         ofSetColor(ofColor::black);
         ofDrawRectangle(0,0,fbo.getWidth(), fbo.getHeight());
-        ofSetColor(ofColor::white);
+        ofEnableAlphaBlending();
+        ofSetColor(255,255,255,tweenlinear.update());
         image.draw(0,0,fbo.getWidth(), fbo.getHeight());
+        ofDisableAlphaBlending();
+        ofPopStyle();
     }
     //draw something
     //            simpleCam.draw(0, 0, fbo.getWidth(), fbo.getHeight());
@@ -92,7 +104,7 @@ void ofApp::update(){
     opticalFlow.setSource(fbo.getTexture());
     
     
-     opticalFlow.update(deltaTime);
+     opticalFlow.update();
     // use internal deltatime instead
 //    opticalFlow.update();
     
@@ -126,7 +138,7 @@ void ofApp::update(){
         
         if(drawText ){
             particleFlow.addFlowVelocity(forceVs[i]->getTexture(), forceVs[i]->getStrength());
-            drawText = false;
+//            drawText = false;
             
         }
     }
@@ -156,7 +168,7 @@ void ofApp::update(){
         }
     }
     
-    fluidSimulation.update(deltaTime);
+    fluidSimulation.update();
     
     if (particleFlow.isActive()) {
         particleFlow.setSpeed(fluidSimulation.getSpeed());
@@ -166,19 +178,19 @@ void ofApp::update(){
         //		particleFlow.addDensity(fluidSimulation.getDensity());
         particleFlow.setObstacle(fluidSimulation.getObstacle());
     }
-    particleFlow.update(deltaTime);
+    particleFlow.update();
+    if(tweenlinear.update()<125){
+        drawText = false;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(0);
     ofEnableBlendMode(OF_BLENDMODE_ADD);
-    if(showFbo){
-        image.draw(0,0,drawWidth, drawHeight);
-    }
-    
-    drawComposite(0,0,drawWidth, drawHeight);
-    
+
+    drawComposite(-extend,-extend,drawWidth+extend*2, drawHeight+extend*2);
+    server.publishScreen();
 }
 
 //--------------------------------------------------------------
@@ -195,14 +207,18 @@ void ofApp::keyReleased(int key){
         
         fbo.black();
         opticalFlow.setSource(fbo.getTexture());
-        opticalFlow.update(deltaTime);
+        opticalFlow.update();
         
         velocityMask.setDensity(fbo.getTexture());
         velocityMask.update();
         fluidSimulation.addVelocity(opticalFlow.getOpticalFlowDecay());
         fluidSimulation.addDensity(velocityMask.getColorMask());
         fluidSimulation.addTemperature(velocityMask.getLuminanceMask());
-        fluidSimulation.update(deltaTime);
+        fluidSimulation.update();
+        
+        unsigned delay = 0;
+        unsigned duration = 1000;
+        tweenlinear.setParameters(1,easinglinear,ofxTween::easeOut,255,0,duration,delay);
 
     }
 }
@@ -263,9 +279,17 @@ void ofApp::drawComposite(int _x, int _y, int _width, int _height) {
     if (particleFlow.isActive())
         particleFlow.draw(_x, _y, _width, _height);
     
-    //    if (showLogo) {
-    //            flowToolsLogoImage.draw(_x, _y, _width, _height);
-    //    }
+    //    if(showFbo)
+    {
+        
+        ofPushStyle();
+        ofEnableAlphaBlending();
+        ofSetColor(255,255,255,tweenlinear.update());
+        image.draw(-extend,-extend,drawWidth+extend*2,drawHeight+extend*2);
+        ofDisableAlphaBlending();
+        ofPopStyle();
+    }
+
     
     ofPopStyle();
 }

@@ -1,2 +1,4 @@
 ofxFlowTools
 ofxGui
+ofxSyphon
+ofxTween

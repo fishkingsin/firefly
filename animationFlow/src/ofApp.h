@@ -2,7 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxFlowTools.h"
-
+#include "ofxSyphon.h"
+#include "ofxTween.h"
 //#define USE_PROGRAMMABLE_GL
 
 using namespace flowTools;
@@ -54,4 +55,9 @@ public:
     ofImage image;
     
     bool showFbo;
+    ofxSyphonServer server;
+    
+    ofxTween tweenlinear;
+    ofxEasingLinear 	easinglinear;
+    int extend;
 };
