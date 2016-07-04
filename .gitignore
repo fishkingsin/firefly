@@ -17,3 +17,13 @@ python/rpi
 FireflyController.xcscmblueprint
 ledController/application.macosx
 sketch.properties
+videoClient/obj/osx/Release/.compiler_flags
+videoClient/obj/osx/Release/src/main.d
+videoClient/obj/osx/Release/src/main.o
+videoClient/obj/osx/Release/src/ofApp.d
+videoClient/obj/osx/Release/src/ofApp.o
+videoDelay/obj/osx/Release/.compiler_flags
+videoDelay/obj/osx/Release/src/main.d
+videoDelay/obj/osx/Release/src/main.o
+videoDelay/obj/osx/Release/src/ofApp.d
+videoDelay/obj/osx/Release/src/ofApp.o
