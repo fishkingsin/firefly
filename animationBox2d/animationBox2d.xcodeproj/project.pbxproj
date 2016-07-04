@@ -236,6 +236,70 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>676E80564DB803E0D09522AF</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMetaBall2D.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMetaBall2D/src/ofxMetaBall2D.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9B103F30F6DD0F290BF16689</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>5DD0AFCD26D38B89785C3E60</string>
+					<string>676E80564DB803E0D09522AF</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>E38C0A6079F9E68E6F822671</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>9B103F30F6DD0F290BF16689</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxMetaBall2D</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>F0985911A3E79D4E1DEBDBBC</key>
+			<dict>
+				<key>fileRef</key>
+				<string>5DD0AFCD26D38B89785C3E60</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>5DD0AFCD26D38B89785C3E60</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMetaBall2D.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxMetaBall2D/src/ofxMetaBall2D.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>D69EEDD422CB44550490C07E</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -3101,6 +3165,7 @@
 				<key>children</key>
 				<array>
 					<string>9DBC3F5A51BD11C17FEB021B</string>
+					<string>E38C0A6079F9E68E6F822671</string>
 					<string>F5F1F1EF8441E64FD46F07C8</string>
 				</array>
 				<key>isa</key>
@@ -3268,6 +3333,7 @@
 						<string>../../../addons/ofxLiquidFun/libs/Box2D/Rope</string>
 						<string>../../../addons/ofxLiquidFun/libs/triangle</string>
 						<string>../../../addons/ofxLiquidFun/src</string>
+						<string>../../../addons/ofxMetaBall2D/src</string>
 						<string>../../../addons/ofxSvg/libs</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny/src</string>
@@ -3342,6 +3408,7 @@
 						<string>../../../addons/ofxLiquidFun/libs/Box2D/Rope</string>
 						<string>../../../addons/ofxLiquidFun/libs/triangle</string>
 						<string>../../../addons/ofxLiquidFun/src</string>
+						<string>../../../addons/ofxMetaBall2D/src</string>
 						<string>../../../addons/ofxSvg/libs</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny/src</string>
@@ -3465,6 +3532,7 @@
 					<string>22998D9E34B49C5C4BD5AC71</string>
 					<string>109B799A08029E0E78AA8FB0</string>
 					<string>9BFDBA462B809FAF024A1BD5</string>
+					<string>F0985911A3E79D4E1DEBDBBC</string>
 					<string>B88A57B4B0BA6191EF3571E9</string>
 					<string>6A565A9714A6A12EB9098F52</string>
 					<string>1D6B78EF041B097CE4F423C4</string>
@@ -3566,6 +3634,7 @@
 						<string>../../../addons/ofxLiquidFun/libs/Box2D/Rope</string>
 						<string>../../../addons/ofxLiquidFun/libs/triangle</string>
 						<string>../../../addons/ofxLiquidFun/src</string>
+						<string>../../../addons/ofxMetaBall2D/src</string>
 						<string>../../../addons/ofxSvg/libs</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny/src</string>
@@ -3630,6 +3699,7 @@
 						<string>../../../addons/ofxLiquidFun/libs/Box2D/Rope</string>
 						<string>../../../addons/ofxLiquidFun/libs/triangle</string>
 						<string>../../../addons/ofxLiquidFun/src</string>
+						<string>../../../addons/ofxMetaBall2D/src</string>
 						<string>../../../addons/ofxSvg/libs</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny</string>
 						<string>../../../addons/ofxSvg/libs/svgTiny/src</string>

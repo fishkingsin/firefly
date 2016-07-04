@@ -14,9 +14,10 @@ void ofApp::setup() {
     box2d.registerGrabbing();
     int extend = 100;
     box2d.createBounds(0,-extend*0.5,ofGetWidth(),ofGetHeight()+extend*5);
-    particles.setParticleFlag(b2_waterParticle);
-    particles.setup(box2d.getWorld());
-    
+    particles.setParticleFlag(b2_tensileParticle);
+    particles.loadImage("particle32.png");
+//    particles.setup(box2d.getWorld());
+    particles.setup(box2d.getWorld(), 20000, 60.0, 6.0, 42.0, ofColor::white);
     for (int i = 0; i < 8000; i++) {
         ofVec2f position = ofVec2f(ofRandomWidth(),
                                    ofRandomHeight()*0.2);
@@ -51,6 +52,7 @@ void ofApp::setup() {
     }
     
     
+    metaball2D.setup(ofGetWidth(), ofGetHeight());
     
 //    for(int j = 0 ; j < 500 ; j++){
 //        circles.push_back(ofPtr<ofxBox2dCircle>(new ofxBox2dCircle));
@@ -84,15 +86,27 @@ void ofApp::draw() {
         ofSetHexColor(0xBF2545);
         boxes[i].get()->draw();
     }
+//    metaball2D.setBackgroundColor(255,255,255);
+//    metaball2D.setColor(255,0,0);
+    
+//    metaball2D.setThreshold(0.235);
+    ofSetColor(ofColor::white);
+    metaball2D.begin();
     ofSetColor(ofColor::white);
     particles.draw();
+    metaball2D.end();
+    ofSetColor(ofColor::white);
+    metaball2D.draw(0, 0);
+    
     if(drawParticle){
-        particles.draw();
-        ofSetColor(ofColor::white);
-        for(int i = 0 ; i < edges.size() ; i++)
-        {
-            edges[i]->draw();
-        }
+        
+        metaball2D.rawTexture().draw(0,0);
+//        particles.draw();
+//        ofSetColor(ofColor::white);
+//        for(int i = 0 ; i < edges.size() ; i++)
+//        {
+//            edges[i]->draw();
+//        }
     }
     
     string info = "";

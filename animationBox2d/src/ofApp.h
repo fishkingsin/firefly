@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ofxLiquidFun.h"
 #include "ofxSvg.h"
-
+#include "ofxMetaBall2D.h"
 // -------------------------------------------------
 
 class ofApp : public ofBaseApp {
@@ -28,4 +28,5 @@ public:
     bool drawParticle;
     ofxSVG svg;
     vector <ofPtr<ofxBox2dEdge> >       edges;
+    ofxMetaBall2D metaball2D;
 };
