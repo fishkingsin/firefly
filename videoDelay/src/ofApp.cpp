@@ -107,6 +107,7 @@ void ofApp::setup(){
         shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderProgram);
         shader.linkProgram();
     }
+    filter = 0.9;
     //setup our directory
     
 }
