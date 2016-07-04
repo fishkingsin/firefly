@@ -26,7 +26,7 @@ void ofApp::setup(){
     // MOUSE DRAW
     mouseForces.setup(flowWidth, flowHeight, drawWidth, drawHeight);
     
-    float foce = 0.3;
+    float foce = 0.07;
     float radius = 150;
     setupForce(ofVec2f(ofGetWidth()*0.25,ofGetHeight()*0.1),    ofVec2f(0,foce), radius);
     setupForce(ofVec2f(50,ofGetHeight()*0.1),                   ofVec2f(foce,0), radius);
