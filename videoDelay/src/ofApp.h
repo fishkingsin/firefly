@@ -51,4 +51,5 @@ public:
     ofxSyphonServer server;
     
     float filter;
+    int fps;
 };

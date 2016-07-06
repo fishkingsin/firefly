@@ -73,9 +73,9 @@ void ofApp::draw(){
     ofBackground(0, 0, 0);
     ofColor(255, 255, 255, 255);
     ofEnableAlphaBlending();
-    if(dir.isValidIndex(dirIdx) ){
+//    if(dir.isValidIndex(dirIdx) ){
         client.draw(0, 0,ofGetWidth(),ofGetHeight());
-    }
+//    }
 }
 
 //--------------------------------------------------------------

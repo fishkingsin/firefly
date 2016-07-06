@@ -2,7 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetFrameRate(120);
+    fps = 60;
+    ofSetFrameRate(fps);
     receiver.setup(PORT);
     
     current_msg_string = 0;
@@ -221,7 +222,16 @@ void ofApp::keyPressed(int key){
 #endif
     }
     
-    
+    switch(key){
+            case '-':
+            fps = (fps>0)?fps-1:fps;
+            ofSetFrameRate(fps);
+            break;
+        case '=':
+            fps++;
+            ofSetFrameRate(fps);
+            break;
+    }
 }
 
 //--------------------------------------------------------------
