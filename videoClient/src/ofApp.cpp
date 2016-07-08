@@ -57,12 +57,15 @@ void ofApp::update(){
             // both the arguments are int32's
             string serverName = m.getArgAsString(0);
             string applicationName = m.getArgAsString(1);
+            dirIdx = 0;
             for( auto& dir : dir.getServerList() ){
                 string servName = dir.serverName;
                 string appName = dir.appName;
                 if(serverName.compare(servName)==0 && applicationName.compare(appName) == 0 ){
                     client.set(serverName,applicationName);
+                    break;
                 }
+                dirIdx++;
             }
         }
     }
@@ -73,9 +76,9 @@ void ofApp::draw(){
     ofBackground(0, 0, 0);
     ofColor(255, 255, 255, 255);
     ofEnableAlphaBlending();
-//    if(dir.isValidIndex(dirIdx) ){
+    if(dir.isValidIndex(dirIdx) ){
         client.draw(0, 0,ofGetWidth(),ofGetHeight());
-//    }
+    }
 }
 
 //--------------------------------------------------------------
