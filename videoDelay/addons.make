@@ -1,0 +1,3 @@
+ofxEdsdk
+ofxOsc
+ofxSyphon

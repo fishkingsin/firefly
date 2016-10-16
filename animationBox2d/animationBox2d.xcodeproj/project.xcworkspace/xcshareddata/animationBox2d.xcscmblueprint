@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "542AA5F01D83C433FCB907EF0BEAE697C6036640",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "18EEBE2F1A8F6F6C05DBFC5AE1BCF46FFB18DBA8" : 0,
+    "D42DE3F696BC144CED2E34D70284F6B6F2DE6ED9" : 0,
+    "542AA5F01D83C433FCB907EF0BEAE697C6036640" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "F1D6DB77-B814-42C6-A9C8-0F5F322F4E36",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "18EEBE2F1A8F6F6C05DBFC5AE1BCF46FFB18DBA8" : "..\/addons\/ofxLiquidFun",
+    "D42DE3F696BC144CED2E34D70284F6B6F2DE6ED9" : "..\/addons\/ofxMetaBall2D",
+    "542AA5F01D83C433FCB907EF0BEAE697C6036640" : "fireFlyP5\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "animationBox2d",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "animationBox2d\/animationBox2d.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/tado\/ofxLiquidFun.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "18EEBE2F1A8F6F6C05DBFC5AE1BCF46FFB18DBA8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:fishkingsin\/fireFlyP5.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "542AA5F01D83C433FCB907EF0BEAE697C6036640"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/fishkingsin\/ofxMetaBall2D.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D42DE3F696BC144CED2E34D70284F6B6F2DE6ED9"
+    }
+  ]
+}
